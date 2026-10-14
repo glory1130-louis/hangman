@@ -9,14 +9,16 @@ print("The game is about to start\n")
 print("Let's play Hangman")
 
 def main():
-    global word, display
+    global word, display, length, already_guessed
     words_to_guess = ["january", "apple", "orange", "computer", "keyboard", "display"]
     word = random.choice(words_to_guess)
     length = len(word)
+    print("Length: " + str(length) + "\nThis is a word: " + word)
     display = '_' * length
+    already_guessed = []
 
 def play_loop():
-    play_game = input("Do you want to play again? y=yes, n=no")
+    play_game = input("Do you want to play again? y=yes, n=no\n")
     if play_game == 'y':
         main()
     elif play_game == 'n':
@@ -25,9 +27,8 @@ def play_loop():
 
 def hangman():
     global display, word, already_guessed
-    guess = input("This is a word: " + word + display + "\n Enter your word:")
+    guess = input("Enter your word:")
     guess = guess.strip()
-    already_guessed = []
     limit = 5
     if len(guess) == 0 or len(guess) >= 2:
         print("Invalid input")
@@ -35,7 +36,9 @@ def hangman():
     elif guess in word:
         already_guessed.extend([guess])
         index = word.find(guess)
-        display = display[:index] + '_' + display[index+1:]
+        print(index, already_guessed)
+        word = word[:index] + '_' + word[index+1:]
+        display = display[:index] + guess + display[index+1:]
         print(display)
     elif guess in already_guessed:
         print("Try another letter")
@@ -45,6 +48,12 @@ def hangman():
             play_loop()
         hangman()
         print("Try again" + str(limit) + "remaining")
+    
+    if word == '_' * length:
+        print("Congratulation")
+        play_loop()
+    else:
+        hangman()
 
 if __name__ == "__main__":
     main()
